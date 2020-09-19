@@ -3,13 +3,9 @@ FILES_${PN}_append_ni-e31x-mender = " /data/network/*"
 do_install_append_ni-e31x-mender() {
     install -d ${D}/data/network/
     for FILENAME in ${D}${base_libdir}/systemd/network/*; do
-        # When installing the .network files, "40-" is prepended by mpmd.inc
-        # rename the file back (e.g. "40-eth0.network" to "eth0.network")
-        # when creating the symlink target at /data/network
-        NEW_BASENAME=$(echo "$(basename $FILENAME)" | sed "s|^40-||")
-        cp $FILENAME ${D}/data/network/$NEW_BASENAME
+        cp $FILENAME ${D}/data/network/
         mv $FILENAME $FILENAME.sample
-        ln -s /data/network/$NEW_BASENAME $FILENAME
+        ln -s /data/network/$(basename $FILENAME) $FILENAME
     done
 }
 
